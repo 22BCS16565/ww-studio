@@ -1,0 +1,9 @@
+const { exec } = require('child_process');
+process.env.DISABLE_ESLINT_PLUGIN = 'true';
+exec('react-scripts build', (err, stdout, stderr) => {
+  if (err) {
+    console.error(stderr);
+    process.exit(1);
+  }
+  console.log(stdout);
+});
