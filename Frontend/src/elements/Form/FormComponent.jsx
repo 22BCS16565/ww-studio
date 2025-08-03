@@ -18,7 +18,7 @@ const FormComponent= () => {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/projects', {
+      const res = await fetch('http://localhost:5002/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

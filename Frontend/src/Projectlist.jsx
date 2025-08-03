@@ -5,7 +5,7 @@ const ProjectList = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('${process.env.REACT_APP_API_BASE_URL}/api/projects')
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/projects`)
       .then(res => res.json())
       .then(data => {
         setProjects(data);
