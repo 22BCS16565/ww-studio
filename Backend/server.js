@@ -19,12 +19,13 @@ app.use('/api/projects', projectRoutes);
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGO_URI, {
+  .connect(`${process.env.MONGO_URI}/kumkum8950`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-  .then(() => console.log('MongoDB connected ✅'))
-  .catch((err) => console.error('MongoDB error ❌', err));
+  .then(() => console.log('✅ MongoDB connected to kumkum8950'))
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
+
 
 // Start server
 const PORT = process.env.PORT || 5002;
