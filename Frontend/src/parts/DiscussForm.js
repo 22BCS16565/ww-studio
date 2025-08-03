@@ -20,40 +20,62 @@ import Button from 'elements/Button';
 
 export const DiscussForm = (actions) => {
   const { data, resetForm } = actions;
-  const submitEmail = () => {
-    const {
-      name, company, email, phone, projectIdea,
-    } = data;
+  const submitEmail = async () => {
+  const {
+    name, company, email, phone, projectIdea,
+  } = data;
 
-    const templateParams = {
-      from_name: `${name} - ${company} ( ${phone} - ${email} )`,
-      to_name: 'WWTECH',
-      message: projectIdea,
-    };
+  const templateParams = {
+    from_name: `${name} - ${company} ( ${phone} - ${email} )`,
+    to_name: 'WWTECH',
+    message: projectIdea,
+  };
 
-    if (
-      name !== ''
-      && company !== ''
-      && email !== ''
-      && phone !== ''
-      && projectIdea !== ''
-    ) {
-      emailjs.send(
+  if (
+    name !== ''
+    && company !== ''
+    && email !== ''
+    && phone !== ''
+    && projectIdea !== ''
+  ) {
+    try {
+      // 1. Send Email
+      await emailjs.send(
         'service_h4gtndg',
         'template_a9tvs7a',
         templateParams,
-        'user_csqIxzN5mKsl1yw4ffJzV',
-      )
-        .then(() => {
-          toast.success('Success! we\'\ll get back to you soon. Thank you!');
-          resetForm();
-        }, (error) => {
-          toast.error(error);
-        });
-    } else {
-      toast.error('Please fill out the blank form.');
+        'user_csqIxzN5mKsl1yw4ffJzV'
+      );
+
+      // 2. Also send to backend API
+      const res = await fetch('https://ww-studio-1.onrender.com/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          company,
+          email,
+          contactNumber: phone,
+          idea: projectIdea
+        }),
+      });
+
+      if (res.ok) {
+        toast.success("✅ Submitted! We'll get back to you soon.");
+        resetForm();
+      } else {
+        const data = await res.json();
+        toast.error(data.error || '❌ Submission failed.');
+      }
+    } catch (error) {
+      toast.error('❌ Server or network error.');
+      console.error(error);
     }
-  };
+  } else {
+    toast.error('Please fill out the blank form.');
+  }
+};
+
 
   return (
     <section className="flex flex-col container mx-auto mt-10 justify-center">
